@@ -6,7 +6,7 @@ import (
 )
 
 type LsLocal struct {
-	Cipher     *cipher
+	Cipher     *CodebookCipher
 	ListenAddr *net.TCPAddr
 	RemoteAddr *net.TCPAddr
 }
@@ -18,10 +18,10 @@ type LsLocal struct {
 // 3. 转发socket数据到墙外代理服务端
 // 4. 把服务端返回的数据转发给用户的浏览器
 func NewLsLocal(password string, listenAddr, remoteAddr string) (*LsLocal, error) {
-	bsPassword, err := parsePassword(password)
-	if err != nil {
-		return nil, err
-	}
+	//bsPassword, err := parsePassword(password)
+	//if err != nil {
+	//return nil, err
+	//}
 	structListenAddr, err := net.ResolveTCPAddr("tcp", listenAddr)
 	if err != nil {
 		return nil, err
@@ -31,7 +31,7 @@ func NewLsLocal(password string, listenAddr, remoteAddr string) (*LsLocal, error
 		return nil, err
 	}
 	return &LsLocal{
-		Cipher:     newCipher(bsPassword),
+		Cipher:     NewCodebookCipher(password),
 		ListenAddr: structListenAddr,
 		RemoteAddr: structRemoteAddr,
 	}, nil
